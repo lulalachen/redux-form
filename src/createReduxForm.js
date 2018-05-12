@@ -969,7 +969,7 @@ const createReduxForm = (structure: Structure<*, *>) => {
           const {
             form,
             getFormState,
-            initialValues,
+            initialValues: initialValuesOrGetter,
             enableReinitialize,
             keepDirtyOnReinitialize
           } = props
@@ -977,6 +977,11 @@ const createReduxForm = (structure: Structure<*, *>) => {
           const stateInitial = getIn(formState, 'initial')
           const initialized = !!stateInitial
 
+          let initialValues = initialValuesOrGetter
+          if (typeof initialValuesOrGetter === 'function') {
+            initialValues = initialValuesOrGetter(state, props)
+          }
+          
           const shouldUpdateInitialValues =
             enableReinitialize &&
             initialized &&
